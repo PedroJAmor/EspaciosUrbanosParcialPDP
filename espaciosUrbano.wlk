@@ -1,6 +1,6 @@
 //PUNTO 1
-cclass EspacioUrbano{
-  const nombre
+class EspacioUrbano{
+  //const nombre
   var property valuacion
   const superficie
   var property tieneVallado
@@ -36,7 +36,7 @@ class Plaza inherits EspacioUrbano{
 }
 
 class Plazoleta inherits EspacioUrbano{
-  const superficieSinCesped
+  //const superficieSinCesped
   const procerHomenajeado
   
   override method condicionParticularEsGrande() = (procerHomenajeado == "San Martín" ) && tieneVallado
@@ -46,7 +46,7 @@ class Plazoleta inherits EspacioUrbano{
 
 class Anfiteatro inherits EspacioUrbano{
   const capacidad
-  const tamanioEscenario
+  //const tamanioEscenario
 
   override method condicionParticularEsGrande() = capacidad > 500
   override method esVerde() = false
@@ -81,18 +81,27 @@ class Profesion{
     self.agregarFichaTrabajo(espacio, persona)
   }
 
-  method agregarFichaTrabajo(espacio, persona)
+  method agregarFichaTrabajo(espacio, persona){
+    const trabajo = new Trabajo(
+        fecha = new Date(), //preguntar si es asi
+        persona = persona,
+        duracion = self.duracionTrabajo(espacio),
+        costo = self.costo(espacio)
+    )
+
+    espacio.agregarTrabajo(trabajo) //agrega el trabajo a la lista 
+  }
   method validarTrabajo(espacio)
   method realizarTrabajo(espacio) 
 
   method costo(espacio) = valorPorHora * self.duracionTrabajo(espacio) //el costo depende de la profesion porque el unico que cambia es el jardinero 
   method duracionTrabajo(espacio) //duracion
 
-  method esTrabajoHeavy(espacio) = self.duracionTrabajo(espacio) > 5 || self.costo(espacio) > 10000
+  method esTrabajoHeavy(espacio) = self.costo(espacio) > 10000
 
   //method costo()
 }
-
+//cerrajero
 object cerrajero inherits Profesion{
   override method validarTrabajo(espacio){
     if (espacio.tieneVallado()) throw new DomainException(message = "El Espacio tiene vallado")
@@ -102,22 +111,14 @@ object cerrajero inherits Profesion{
     espacio.tieneVallado(true)
   }
 
-  override method agregarFichaTrabajo(espacio, persona){
-    const trabajo = new Trabajo(
-        fecha = new Date(), //preguntar si es asi
-        persona = persona,
-        duracion = self.duracionTrabajo(espacio),
-        costo = self.costo(espacio)
-    )
-  }
-
   override method duracionTrabajo(espacio) = if(espacio.esGrande()) 5 else 3
 
 //agrego el metodo es trabajo heavy
-  override method esTrabajoHeavy(espacio) = self.duracionTrabajo(espacio) > 5 || self.costo(espacio) > 10000
+  override method esTrabajoHeavy(espacio) = super(espacio) || self.duracionTrabajo(espacio) > 5 //para no repetir codigo se usa el super
    
 }
 
+//jardinero
 object jardinero inherits Profesion{
   override method validarTrabajo(espacio){
     if(!espacio.esVerde()) throw new DomainException(message = "El espacio no es verde")
@@ -126,20 +127,12 @@ object jardinero inherits Profesion{
     espacio.esMasLindo()
   }
   
-  override method agregarFichaTrabajo(espacio, persona){
-    const trabajo = new Trabajo(
-        fecha = new Date(), //preguntar si es asi
-        persona = persona,
-        duracion = self.duracionTrabajo(espacio),
-        costo = self.costo(espacio)
-    )
-  }
-
   override method costo(espacio) = 2500
 
   override method duracionTrabajo(espacio) = espacio.superficie().div(10)
 }
 
+//jardinero
 object encargado inherits Profesion{
   override method validarTrabajo(espacio){
     if(!espacio.esLimpiable()) throw new DomainException(message = "El espacio no es limpiable")
@@ -149,27 +142,12 @@ object encargado inherits Profesion{
     espacio.aumentarValuacion(5000)
   }
 
-  override method agregarFichaTrabajo(espacio, persona){
-    const trabajo = new Trabajo(
-        fecha = new Date(), //preguntar si es asi
-        persona = persona,
-        duracion = self.duracionTrabajo(espacio),
-        costo = self.costo(espacio)
-    )
-  }
-
   override method duracionTrabajo(espacio) = 8
-
 } 
 
 class Trabajo{
   const fecha
   const persona
-  //const espacio
   const duracion
   const costo
-
-  // Método que determina si el trabajo es heavy según la profesión
-  //method esHeavy() =
-
 }
