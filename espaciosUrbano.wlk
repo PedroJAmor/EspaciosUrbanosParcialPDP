@@ -1,5 +1,5 @@
 //PUNTO 1
-class EspacioUrbano{
+cclass EspacioUrbano{
   const nombre
   var property valuacion
   const superficie
@@ -22,7 +22,7 @@ class EspacioUrbano{
     valuacion += valuacionQueAumenta    
   }
 
-  method agregarTrabajo(trabajo){
+  method agregarTrabajo(trabajo){ //esto agrega trabajos a la lista 
     trabajosRealizados.add(trabajo)
   }
 }
@@ -75,7 +75,7 @@ class Persona {
 class Profesion{
   var property valorPorHora = 100
 
-  method trabaja(espacio, persona){
+  method trabaja(espacio, persona){ //traba una persona en un espacio realiza todo esto
     self.validarTrabajo(espacio)  
     self.realizarTrabajo(espacio)
     self.agregarFichaTrabajo(espacio, persona)
@@ -85,8 +85,10 @@ class Profesion{
   method validarTrabajo(espacio)
   method realizarTrabajo(espacio) 
 
-  method costo(espacio) = valorPorHora * self.duracionTrabajo(espacio)
-  method duracionTrabajo(espacio) //dura
+  method costo(espacio) = valorPorHora * self.duracionTrabajo(espacio) //el costo depende de la profesion porque el unico que cambia es el jardinero 
+  method duracionTrabajo(espacio) //duracion
+
+  method esTrabajoHeavy(espacio) = self.duracionTrabajo(espacio) > 5 || self.costo(espacio) > 10000
 
   //method costo()
 }
@@ -101,10 +103,18 @@ object cerrajero inherits Profesion{
   }
 
   override method agregarFichaTrabajo(espacio, persona){
-    
+    const trabajo = new Trabajo(
+        fecha = new Date(), //preguntar si es asi
+        persona = persona,
+        duracion = self.duracionTrabajo(espacio),
+        costo = self.costo(espacio)
+    )
   }
 
   override method duracionTrabajo(espacio) = if(espacio.esGrande()) 5 else 3
+
+//agrego el metodo es trabajo heavy
+  override method esTrabajoHeavy(espacio) = self.duracionTrabajo(espacio) > 5 || self.costo(espacio) > 10000
    
 }
 
@@ -117,12 +127,19 @@ object jardinero inherits Profesion{
   }
   
   override method agregarFichaTrabajo(espacio, persona){
-
+    const trabajo = new Trabajo(
+        fecha = new Date(), //preguntar si es asi
+        persona = persona,
+        duracion = self.duracionTrabajo(espacio),
+        costo = self.costo(espacio)
+    )
   }
 
   override method costo(espacio) = 2500
+
   override method duracionTrabajo(espacio) = espacio.superficie().div(10)
 }
+
 object encargado inherits Profesion{
   override method validarTrabajo(espacio){
     if(!espacio.esLimpiable()) throw new DomainException(message = "El espacio no es limpiable")
@@ -133,14 +150,26 @@ object encargado inherits Profesion{
   }
 
   override method agregarFichaTrabajo(espacio, persona){
-
+    const trabajo = new Trabajo(
+        fecha = new Date(), //preguntar si es asi
+        persona = persona,
+        duracion = self.duracionTrabajo(espacio),
+        costo = self.costo(espacio)
+    )
   }
 
   override method duracionTrabajo(espacio) = 8
+
 } 
 
 class Trabajo{
   const fecha
   const persona
+  //const espacio
+  const duracion
+  const costo
+
+  // Método que determina si el trabajo es heavy según la profesión
+  //method esHeavy() =
 
 }
