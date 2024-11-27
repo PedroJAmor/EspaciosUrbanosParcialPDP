@@ -1,0 +1,90 @@
+import espaciosUrbano.*
+
+describe "Test de Espacios Grandes" {
+
+  const fixtureEspacio = object {
+
+    method construirPlaza(canchas, _superficie) = new Plaza(nombre ="",
+    valuacion = 0,
+    tieneVallado = false,
+    cantidadDeCanchas = canchas,
+    superficie = _superficie)
+
+    method construirPlazoleta(procer, vallado, _superficie) = new Plazoleta(nombre ="",
+    valuacion = 0,
+    tieneVallado = vallado,
+    superficie = _superficie,
+    procerHomenajeado = procer,
+    superficieSinCesped = 0)
+
+    method construirAnfiteatro(_capacidad, _superficie) = new Anfiteatro(nombre ="",
+    valuacion = 0,
+    tieneVallado = false,
+    tamanioEscenario = 0,
+    capacidad = _capacidad,
+    superficie = _superficie)   
+  }
+  
+  test "Plaza es grande" {
+    const plaza = fixtureEspacio.construirPlaza(3, 51)
+
+    assert.that(plaza.esGrande())
+  }
+
+  test "Plaza no es grande, pocas canchas" {
+    const plaza = fixtureEspacio.construirPlaza(2, 51)
+
+    assert.notThat(plaza.esGrande())
+  }
+
+  test "Plaza no es grande, poca superficie" {
+    const plaza = fixtureEspacio.construirPlaza(3, 50)
+
+    assert.notThat(plaza.esGrande())
+  }
+
+  test "Plaza no es grande, poca superficie y pocas canchas" {
+    const plaza = fixtureEspacio.construirPlaza(2, 50)
+
+    assert.notThat(plaza.esGrande())
+  }
+
+  test "Plazoleta es grande" {
+    const plazoleta = fixtureEspacio.construirPlazoleta("San Martín", true, 51)
+
+    assert.that(plazoleta.esGrande())
+  }
+
+  test "Plazoleta no es grande, no san martin" {
+    const plazoleta = fixtureEspacio.construirPlazoleta("San Martíniano", true, 51)
+
+    assert.notThat(plazoleta.esGrande())
+  }
+
+  test "Anfiteatro es grande"{
+    const anfiteatro = fixtureEspacio.construirAnfiteatro(501, 51)
+
+    assert.that(anfiteatro.esGrande())
+  }
+
+  test "Anfiteatro no es grande, poca capacidad"{
+    const anfiteatro = fixtureEspacio.construirAnfiteatro(500, 51)
+
+    assert.notThat(anfiteatro.esGrande())
+  }
+
+  test "Anfiteatro no es grande, poca superficie"{
+    const anfiteatro = fixtureEspacio.construirAnfiteatro(501, 50)
+
+    assert.notThat(anfiteatro.esGrande())
+  }
+
+  test "Anfiteatro no es grande, poca superficie y poca capacidad"{
+    const anfiteatro = fixtureEspacio.construirAnfiteatro(500, 50)
+
+    assert.notThat(anfiteatro.esGrande())
+  }
+
+
+}
+
